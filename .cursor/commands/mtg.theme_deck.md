@@ -1,6 +1,5 @@
 ---
 description: Theme a MTG Commander deck and emit themed_deck.json
-argument-hint: DECKLIST="<path|raw list>" THEME="<theme/skin details>" [COMMANDER="<name>"]
 ---
 
 Given a Commander decklist ($DECKLIST as text or file path), a theme ($THEME), and optional commander override ($COMMANDER), produce themed_deck.json with this exact structure:
