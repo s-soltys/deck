@@ -1,0 +1,131 @@
+openapi: 3.0.3
+info:
+  title: Commander Deck Themer API
+  version: 1.0.0
+servers:
+  - url: /api
+paths:
+  /decks:
+    post:
+      summary: Create a themed deck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeckCreateRequest'
+      responses:
+        '201':
+          description: Deck created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
+        '400':
+          description: Invalid decklist
+  /decks/{public_slug}:
+    get:
+      summary: Get a themed deck by public slug
+      parameters:
+        - name: public_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deck details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
+        '404':
+          description: Deck not found
+  /decks/{public_slug}/generate-images:
+    post:
+      summary: Generate alternate images for a deck
+      parameters:
+        - name: public_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Image generation started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeckResponse'
+  /decks/{public_slug}/cards:
+    get:
+      summary: List themed cards for a deck
+      parameters:
+        - name: public_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Themed card list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThemedCardListResponse'
+components:
+  schemas:
+    DeckCreateRequest:
+      type: object
+      required:
+        - decklist_text
+        - theme_description
+        - commander_name
+      properties:
+        decklist_text:
+          type: string
+        theme_description:
+          type: string
+        commander_name:
+          type: string
+    DeckResponse:
+      type: object
+      properties:
+        public_slug:
+          type: string
+        status:
+          type: string
+        unresolved_cards:
+          type: array
+          items:
+            type: string
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThemedCard'
+    ThemedCardListResponse:
+      type: object
+      properties:
+        public_slug:
+          type: string
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThemedCard'
+    ThemedCard:
+      type: object
+      properties:
+        card_name:
+          type: string
+        themed_name:
+          type: string
+        art_description:
+          type: string
+        image_url:
+          type: string
+        themed_image_url:
+          type: string
+        quantity:
+          type: integer
+        parse_status:
+          type: string
